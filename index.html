@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Yale SOM — Core Schedule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d1b2a;
+    --yale-blue:#00356b;
+    --yale-blue-deep:#062042;
+    --paper:#f6f4ee;
+    --line:#d8d2c2;
+    --line-soft:#e7e2d4;
+    --gold:#c9a13b;
+    --muted:#5b6570;
+    --faint:#8a8f96;
+
+
+    --c-competitor:#3c6e71;
+    --c-competitor-bg:#e3edec;
+    --c-customer:#a15c2e;
+    --c-customer-bg:#f2e5da;
+    --c-investor:#6a4c93;
+    --c-investor-bg:#eae3f2;
+    --c-society:#2f5d8a;
+    --c-society-bg:#e2eaf2;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    padding:28px 20px 60px;
+  }
+  button{font-family:inherit;}
+
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  header.page{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    border-bottom:2px solid var(--yale-blue);
+    padding-bottom:16px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--yale-blue);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(28px,4vw,40px);
+    margin:0;
+    color:var(--yale-blue-deep);
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    font-size:13px;
+    color:var(--muted);
+    max-width:380px;
+    line-height:1.5;
+    margin:0;
+  }
+
+  /* Term tabs */
+  .session-tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .session-tabs button{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    font-weight:500;
+    padding:10px 22px;
+    border:1.5px solid var(--yale-blue);
+    background:transparent;
+    color:var(--yale-blue);
+    cursor:pointer;
+    border-radius:3px 3px 0 0;
+    transition:background .15s ease, color .15s ease;
+  }
+  .session-tabs button.active{
+    background:var(--yale-blue);
+    color:#fff;
+  }
+  .session-tabs button:hover:not(.active){
+    background:#e9edf3;
+  }
+
+  /* Controls */
+  .controls{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:14px 16px;
+    margin-bottom:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .ctl-row{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px 14px;
+  }
+  .ctl-row.split{justify-content:space-between;}
+  .ctl-group{display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+  .ctl-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--faint);
+    min-width:84px;
+  }
+
+  .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.05em;
+    padding:6px 13px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:#fff;
+    color:#4a5158;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+  }
+  .pill .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .pill .sw{width:10px;height:10px;border-radius:2px;display:inline-block;}
+  .pill.active{
+    border-color:var(--ink);
+    color:var(--ink);
+    box-shadow:0 0 0 1px var(--ink) inset;
+    font-weight:600;
+  }
+  .pill.course.active{background:var(--chip-bg);border-color:var(--chip-fg);color:var(--chip-fg);box-shadow:0 0 0 1px var(--chip-fg) inset;}
+  .pill:disabled{opacity:.4;cursor:not-allowed;}
+  .pill.link{border-style:dashed;}
+
+  .seg{display:inline-flex;border:1.5px solid var(--yale-blue);border-radius:4px;overflow:hidden;}
+  .seg button{
+    font-size:12.5px;font-weight:500;
+    padding:6px 14px;border:none;background:#fff;color:var(--yale-blue);cursor:pointer;
+  }
+  .seg button + button{border-left:1.5px solid var(--yale-blue);}
+  .seg button.active{background:var(--yale-blue);color:#fff;}
+  .seg button:disabled{color:#b6bcc4;cursor:not-allowed;}
+
+  .btn{
+    font-size:12.5px;font-weight:500;
+    padding:6px 12px;border-radius:4px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;
+  }
+  .btn:hover{border-color:var(--ink);}
+  .btn.primary{background:var(--yale-blue);border-color:var(--yale-blue);color:#fff;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+
+  /* Week nav */
+  .weeknav{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    margin:0 0 10px;flex-wrap:wrap;
+  }
+  .weeknav .title{
+    font-family:'Fraunces', serif;font-size:20px;font-weight:500;color:var(--yale-blue-deep);
+  }
+  .weeknav .nav{display:flex;gap:6px;}
+
+  .legend{
+    display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:#4a5158;margin:0 0 10px;
+  }
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:12px;height:10px;border-radius:2px;display:inline-block;}
+
+  /* Calendar grid */
+  .cal{
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .cal-head{
+    display:grid;
+    grid-template-columns:64px repeat(5,1fr);
+    background:var(--yale-blue-deep);
+  }
+  .cal-head div{
+    color:#fff;
+    font-family:'Fraunces', serif;
+    font-size:14px;
+    font-weight:500;
+    padding:10px 0;
+    text-align:center;
+    border-left:1px solid rgba(255,255,255,.12);
+  }
+  .cal-head div small{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;opacity:.7;font-weight:400;}
+  .cal-head div.today{background:rgba(201,161,59,.35);}
+  .cal-head div:first-child{border-left:none;}
+
+  .cal-body{
+    position:relative;
+    display:grid;
+    grid-template-columns:64px repeat(5,1fr);
+  }
+  .time-col{display:flex;flex-direction:column;}
+  .time-col .slot{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:var(--faint);
+    text-align:right;
+    padding-right:8px;
+    border-top:1px solid var(--line-soft);
+    transform:translateY(-6px);
+  }
+  .time-col .slot:first-child{border-top:none;}
+
+  .day-col{position:relative;border-left:1px solid var(--line-soft);}
+  .day-col .gridline{border-top:1px solid var(--line-soft);}
+  .day-col .gridline:first-child{border-top:none;}
+  .day-col.off{
+    background:repeating-linear-gradient(135deg,#f4f1e8 0 8px,#ece7d9 8px 16px);
+  }
+  .day-col .off-label{
+    position:absolute;top:40%;left:0;right:0;text-align:center;
+    font-family:'Fraunces',serif;font-size:14px;color:var(--muted);
+  }
+
+  .block{
+    position:absolute;
+    border-radius:5px;
+    padding:6px 7px;
+    font-size:11.5px;
+    line-height:1.3;
+    overflow:hidden;
+    border-left:3px solid transparent;
+    box-shadow:0 1px 2px rgba(13,27,42,.06);
+  }
+  .block.clickable{cursor:pointer;}
+  .block.clickable:hover{box-shadow:0 0 0 2px var(--ink);z-index:5;}
+  .block .t{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:12.5px;
+    display:block;
+    margin-bottom:1px;
+  }
+  .block .m{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px;
+    opacity:.85;
+    display:block;
+  }
+  .block .tp{display:block;font-size:10.5px;opacity:.9;margin-top:2px;}
+  .block .badge{
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em;
+    padding:1px 5px;border-radius:8px;background:rgba(255,255,255,.85);color:var(--ink);margin-top:2px;
+  }
+  .block .cdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:1px;}
+
+  .block.ghost{
+    background:rgba(255,255,255,.88) !important;
+    border:1.5px dashed currentColor;
+    border-left-width:1.5px;
+    box-shadow:none;
+    opacity:.9;
+  }
+  .block.ghost.conflict{opacity:.45;}
+  .block.skipped{
+    opacity:.5;
+    background-image:repeating-linear-gradient(135deg,transparent 0 6px,rgba(255,255,255,.7) 6px 12px) !important;
+  }
+  .block.skipped .t{text-decoration:line-through;}
+  .block.swapped{box-shadow:0 0 0 2px currentColor inset, 0 1px 3px rgba(13,27,42,.15);}
+  .block.special{box-shadow:0 0 0 2px var(--gold) inset;}
+  .block.final{background:var(--ink) !important;color:#fff !important;border-left-color:var(--gold) !important;}
+  .block.conflict-own{outline:2px solid #b3261e;outline-offset:-2px;}
+
+  .hint{font-size:12px;color:var(--muted);margin:10px 2px 0;}
+
+  /* Swaps list */
+  .swaps{
+    margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:14px 16px;
+  }
+  .swaps h3{font-family:'Fraunces',serif;font-weight:500;font-size:17px;margin:0 0 8px;color:var(--yale-blue-deep);}
+  .swaps ul{list-style:none;margin:0;padding:0;}
+  .swaps li{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    padding:8px 0;border-top:1px solid var(--line-soft);font-size:13px;
+  }
+  .swaps li:first-child{border-top:none;}
+  .swaps .arrow{color:var(--faint);margin:0 6px;}
+  .swaps .empty{font-size:12.5px;color:var(--faint);}
+  .swaps .warn{color:#b3261e;font-size:12px;margin-left:6px;}
+
+  footer.note{
+    margin-top:18px;
+    font-size:11.5px;
+    color:var(--faint);
+    font-family:'IBM Plex Mono', monospace;
+    line-height:1.6;
+  }
+
+  /* Swap sheet */
+  .scrim{
+    position:fixed;inset:0;background:rgba(13,27,42,.35);display:none;
+    align-items:center;justify-content:center;z-index:50;padding:20px;
+  }
+  .scrim.open{display:flex;}
+  .sheet{
+    background:#fff;border-radius:8px;max-width:520px;width:100%;max-height:85vh;overflow:auto;
+    box-shadow:0 10px 40px rgba(13,27,42,.25);
+  }
+  .sheet .hd{padding:16px 18px 12px;border-bottom:1px solid var(--line-soft);position:relative;}
+  .sheet .hd .eyebrow{margin-bottom:4px;}
+  .sheet .hd h2{font-family:'Fraunces',serif;font-weight:600;font-size:21px;margin:0;color:var(--yale-blue-deep);}
+  .sheet .hd .topic{font-size:13px;color:var(--muted);margin-top:3px;}
+  .sheet .close{position:absolute;top:10px;right:10px;border:none;background:none;font-size:22px;cursor:pointer;color:var(--faint);}
+  .sheet .notice{
+    margin:12px 18px 0;padding:9px 11px;border-radius:5px;background:#fbf6e7;border:1px solid #eadcae;
+    font-size:12.5px;line-height:1.45;color:#5a4a1c;
+  }
+  .sheet .opts{padding:8px 18px 16px;}
+  .opt{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 0;border-top:1px solid var(--line-soft);
+  }
+  .opt:first-child{border-top:none;}
+  .opt .who{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:7px;}
+  .opt .when{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .opt .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:2px 7px;border-radius:9px;margin-left:4px;}
+  .tag.mine{background:#e9edf3;color:var(--yale-blue);}
+  .tag.going{background:var(--yale-blue);color:#fff;}
+  .tag.bad{background:#fbe5e3;color:#b3261e;}
+  .tag.ok{background:#e3efe6;color:#2d6a3e;}
+  .tag.past{background:#eee;color:#777;}
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:9px 16px;border-radius:20px;font-size:13px;
+    opacity:0;transition:all .2s ease;pointer-events:none;z-index:60;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---------- Assignments tab ---------- */
+  #appTabs{margin-bottom:18px;}
+  .tk-summary{
+    display:flex;gap:16px;flex-wrap:wrap;align-items:stretch;margin-bottom:16px;
+  }
+  .tk-card{
+    background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 16px;flex:1 1 240px;
+  }
+  .tk-card .k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);}
+  .tk-card .v{font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--yale-blue-deep);margin-top:2px;}
+  .tk-card .s{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .tk-bar{height:6px;background:var(--line-soft);border-radius:3px;margin-top:8px;overflow:hidden;}
+  .tk-bar i{display:block;height:100%;background:var(--yale-blue);border-radius:3px;transition:width .3s ease;}
+  .tk-check{font-size:12.5px;color:#4a5158;display:inline-flex;align-items:center;gap:6px;cursor:pointer;}
+  .tk-select{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid var(--line);border-radius:4px;background:#fff;}
+  .tk-help{font-size:11.5px;color:var(--faint);}
+
+  .tk-list{background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .tk-row, .tk-head{
+    display:grid;
+    grid-template-columns:44px 170px 118px minmax(0,1fr) 128px 124px 84px;
+    align-items:start;
+  }
+  .tk-head{
+    background:var(--yale-blue-deep);color:#fff;font-family:'Fraunces',serif;font-size:13.5px;font-weight:500;
+  }
+  .tk-head > div{padding:9px 10px;}
+  .tk-week{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:9px 12px 7px;background:#f3f0e6;border-top:1px solid var(--line);
+    font-family:'Fraunces',serif;font-size:15px;font-weight:500;color:var(--yale-blue-deep);
+  }
+  .tk-week small{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--faint);font-weight:400;}
+  .tk-row{border-top:1px solid var(--line-soft);font-size:13px;transition:background .15s ease;}
+  .tk-row > div{padding:10px 10px;}
+  .tk-row:hover{background:#fbfaf6;}
+  .tk-row.overdue{background:#fdf1f0;}
+  .tk-row.soon{background:#fdf8ea;}
+  .tk-row.removed{opacity:.45;}
+  .tk-row.done .tk-title{text-decoration:line-through;text-decoration-thickness:2px;color:var(--faint);}
+  .tk-row.done .tk-desc, .tk-row.done .tk-due{opacity:.55;}
+
+  .tk-box{
+    width:22px;height:22px;border-radius:5px;border:1.5px solid #b8b2a2;background:#fff;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;padding:0;color:#fff;font-size:14px;line-height:1;
+    transition:all .15s ease;
+  }
+  .tk-box:hover{border-color:var(--yale-blue);}
+  .tk-box.on{background:#2d6a3e;border-color:#2d6a3e;}
+  .tk-box.pop{animation:pop .3s ease;}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+  .tk-due b{display:block;font-weight:600;}
+  .tk-due span{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+  .tk-due .moved{color:#9a6b00;}
+  .tk-due .moved s{color:var(--faint);}
+  .tk-due .flag{display:inline-block;margin-top:3px;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:1px 6px;border-radius:8px;}
+  .flag.late{background:#fbe5e3;color:#b3261e;}
+  .flag.soon{background:#f8ecc6;color:#7a5a00;}
+  .tk-course{
+    display:inline-block;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;
+  }
+  .tk-title{font-weight:600;}
+  .tk-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.45;}
+  .tk-note{
+    margin-top:6px;padding:6px 8px;background:#fbf6e7;border-left:3px solid var(--gold);border-radius:3px;
+    font-size:12.5px;white-space:pre-wrap;color:#4a3d14;cursor:text;
+  }
+  .tk-note-edit{width:100%;margin-top:6px;font:inherit;font-size:12.5px;padding:6px 8px;border:1px solid var(--gold);border-radius:4px;min-height:54px;resize:vertical;}
+  .tk-cat{font-size:12.5px;color:#4a5158;}
+  .fmt{
+    display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    padding:3px 8px;border-radius:11px;white-space:nowrap;
+  }
+  .fmt.individual{border:1px solid #b8b2a2;color:#4a5158;background:#fff;}
+  .fmt.group{background:var(--yale-blue);color:#fff;}
+  .fmt.team{background:#5b3f8c;color:#fff;}
+  .tk-actions{display:flex;gap:2px;justify-content:flex-end;}
+  .tk-actions button{
+    border:none;background:none;cursor:pointer;color:var(--faint);font-size:14px;padding:3px 5px;border-radius:4px;
+  }
+  .tk-actions button:hover{background:#eee9db;color:var(--ink);}
+  .tk-edit{display:flex;flex-direction:column;gap:5px;}
+  .tk-edit input{font:inherit;font-size:12px;padding:4px 6px;border:1px solid var(--line);border-radius:4px;width:100%;}
+  .tk-edit .row{display:flex;gap:4px;flex-wrap:wrap;}
+  .tk-edit .btn{padding:3px 8px;font-size:11.5px;}
+  .tk-empty{padding:30px;text-align:center;color:var(--faint);font-size:13px;}
+
+  .form{padding:14px 18px 18px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
+  .form label{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
+  .form label.full{grid-column:1/-1;}
+  .form input,.form select,.form textarea{font:inherit;font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;padding:7px 9px;border:1px solid var(--line);border-radius:4px;color:var(--ink);}
+  .form .actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;margin-top:4px;}
+
+  @media (max-width:860px){
+    .tk-head{display:none;}
+    .tk-row{grid-template-columns:40px minmax(0,1fr) auto;}
+    .tk-row > div{padding:8px 8px;}
+    .tk-row .c-due{grid-column:2;grid-row:1;}
+    .tk-row .c-course{grid-column:2;grid-row:2;padding-top:0;}
+    .tk-row .c-title{grid-column:2 / 4;grid-row:3;padding-top:0;}
+    .tk-row .c-cat{display:none;}
+    .tk-row .c-fmt{grid-column:3;grid-row:1;}
+    .tk-row .c-act{grid-column:3;grid-row:2;}
+    .tk-row .c-box{grid-row:1 / 4;}
+  }
+
+  @media (max-width:640px){
+    body{padding:18px 10px 40px;}
+    .form{grid-template-columns:1fr;}
+    .cal-head div{font-size:11px;}
+    .time-col .slot{font-size:9px;}
+    .block{padding:4px 4px;}
+    .block .t{font-size:10.5px;}
+    .block .m,.block .tp{font-size:8.5px;}
+    .ctl-label{min-width:0;width:100%;}
+    .scrim{align-items:flex-end;padding:0;}
+    .sheet{max-width:none;border-radius:12px 12px 0 0;max-height:80vh;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <div>
+      <p class="eyebrow" id="eyebrow">Yale School of Management · Class of 2027</p>
+      <h1>Core Schedule Planner</h1>
+    </div>
+    <p class="sub">Pick your cohort, overlay other cohorts' sections for the courses you care about, and swap individual sessions when you need to attend a different section.</p>
+  </header>
+
+  <div class="session-tabs" id="appTabs">
+    <button data-tab="schedule">Schedule</button>
+    <button data-tab="tasks">Assignments</button>
+  </div>
+
+  <div class="session-tabs" id="termTabs"></div>
+
+  <!-- ================= SCHEDULE TAB ================= -->
+  <div id="scheduleView">
+  <div class="controls">
+    <div class="ctl-row split">
+      <div class="ctl-group">
+        <span class="ctl-label">My cohort</span>
+        <div class="ctl-group" id="cohortPills"></div>
+      </div>
+      <div class="seg" id="viewSeg">
+        <button data-view="pattern">Weekly pattern</button>
+        <button data-view="week">Calendar by week</button>
+      </div>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-label">Overlay</span>
+      <div class="ctl-group" id="overlayCourses"></div>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-label">From cohorts</span>
+      <div class="ctl-group" id="overlayCohorts"></div>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-label">Share / export</span>
+      <div class="ctl-group">
+        <button class="btn" id="shareBtn">Copy share link</button>
+        <button class="btn" id="icsBtn">Download .ics</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="weeknav" id="weekNav">
+    <div class="title" id="weekTitle"></div>
+    <div class="nav">
+      <button class="btn" id="prevWeek" aria-label="Previous week">◀</button>
+      <button class="btn" id="thisWeek">This week</button>
+      <button class="btn" id="nextWeek" aria-label="Next week">▶</button>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+  <div class="cal" id="cal"></div>
+  <p class="hint" id="hint"></p>
+
+  <section class="swaps" id="swapsBox">
+    <h3>My section swaps</h3>
+    <ul id="swapsList"></ul>
+  </section>
+  </div>
+
+  <!-- ================= ASSIGNMENTS TAB ================= -->
+  <div id="tasksView">
+    <div class="tk-summary" id="tkSummary"></div>
+
+    <div class="controls">
+      <div class="ctl-row">
+        <span class="ctl-label">Courses</span>
+        <div class="ctl-group" id="tkCourses"></div>
+      </div>
+      <div class="ctl-row split">
+        <div class="ctl-group">
+          <span class="ctl-label">Format</span>
+          <div class="seg" id="tkFormat">
+            <button data-tk-format="all">All</button>
+            <button data-tk-format="individual">Individual</button>
+            <button data-tk-format="group">Group</button>
+          </div>
+        </div>
+        <div class="ctl-group">
+          <label class="tk-check"><input type="checkbox" id="tkHideDone"> Hide completed</label>
+          <label class="tk-check"><input type="checkbox" id="tkShowRemoved"> Show removed</label>
+        </div>
+      </div>
+      <div class="ctl-row split">
+        <div class="ctl-group">
+          <span class="ctl-label">Learning team</span>
+          <select id="tkTeam" class="tk-select"></select>
+          <span class="tk-help">State &amp; Society debates: only yours are shown</span>
+        </div>
+        <div class="ctl-group">
+          <button class="btn primary" data-tk-add="1">+ Add assignment</button>
+          <button class="btn" data-tk-export="1">Back up (.json)</button>
+          <button class="btn" data-tk-import="1">Restore</button>
+          <input type="file" id="tkImportFile" accept="application/json,.json" hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="tk-list" id="tkList"></div>
+  </div>
+
+  <footer class="note" id="footer"></footer>
+</div>
+
+<div class="scrim" id="scrim">
+  <div class="sheet" role="dialog" aria-modal="true" id="sheet"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CONFIG — edit this block to adapt the planner to another class year,
+   term, or program. Everything below the CONFIG is generic.
+
+   term.calendar   : dates of session n for each day-pattern group
+                     (MW = Mon/Wed sections, TT = Tue/Thu sections)
+   course.sections : weekly time slot per cohort
+   course.topics   : one entry per session (session n = topics[n-1])
+   course.special  : sessions that override the normal slot for everyone
+   course.final    : final exam
+   ===================================================================== */
+const CONFIG = {
+  cohorts: ["Gold","Silver","Blue","Green","Red"],
+  cohortDot: { Gold:"#c9a13b", Silver:"#8a8f96", Blue:"#2f5d8a", Green:"#3c6e71", Red:"#a13c3c" },
+  defaultTerm: "fall2",
+
+  terms: {
+    fall2: {
+      label: "Fall 2",
+      firstWeek: "2026-10-26",          // Monday of week 1
+      lastWeek:  "2026-12-21",          // Monday of the last week shown (finals)
+      calendar: {
+        MW: ["2026-10-26","2026-10-28","2026-11-02","2026-11-04","2026-11-09","2026-11-11","2026-11-16",
+             "2026-11-18","2026-11-30","2026-12-02","2026-12-07","2026-12-09","2026-12-14"],
+        TT: ["2026-10-27","2026-10-29","2026-11-03","2026-11-05","2026-11-10","2026-11-12","2026-11-17",
+             "2026-11-19","2026-12-01","2026-12-03","2026-12-08","2026-12-10","2026-12-15"],
+      },
+      breaks: [ {from:"2026-11-23", to:"2026-11-27", label:"Thanksgiving recess"} ],
+
+      /* Assignments tracker.
+         due: {session:n}         → start of the section you attend for session n (follows your cohort + swaps)
+              {date, time, label} → fixed deadline (time "HH:MM" or null if not stated)
+         format: individual | group | team      formatLabel: what shows on the pill
+         team: [..]  → only shown if your learning team is listed (or no team picked) */
+      teamLabel: "Learning team",
+      teams: [1,2,3,4,5,6,7,8,9],
+      assignments: [
+        // ---- MGT 410 Competitor ----
+        {id:"410-l3", code:"MGT 410", title:"Cournot & First-Mover Advantage assignment", category:"Written assignment",
+         format:"group", formatLabel:"Group of 4", due:{session:4},
+         desc:"Assigned after Lecture 3; submit on Canvas before your section. (Brief schedule says 8:30 AM.)"},
+        {id:"410-l4", code:"MGT 410", title:"AI project: repeated pricing with changing demand", category:"Project",
+         format:"group", formatLabel:"Group of 4", due:{session:5},
+         desc:"Q1–3 required, Q4 optional. One runnable program, figures, and report per group."},
+        {id:"410-walmart", code:"MGT 410", title:"Walmart vs. Target field project", category:"Written assignment",
+         format:"group", formatLabel:"Group of 4", due:{session:6},
+         desc:"Visit Walmart (Hamden) and Target (North Haven); measure 3–4 store characteristics. Answers due at start of class."},
+        {id:"410-dm", code:"MGT 410", title:"Double marginalization / transfer pricing", category:"Written assignment",
+         format:"group", formatLabel:"Group of 4", due:{session:8},
+         desc:"Vertical contracts problem set (q = 250 − 50p). Submit on Canvas before your section."},
+        {id:"410-industry", code:"MGT 410", title:"Industry analysis: 3-slide deck + 2–3 page memo", category:"Written assignment",
+         format:"group", formatLabel:"Group of 4", due:{session:11},
+         desc:"No AI allowed. Industry assigned by group number. Be ready to present for 10–12 min."},
+        {id:"410-airline", code:"MGT 410", title:"Airline competitor analysis memo", category:"Written assignment",
+         format:"group", formatLabel:"Group of 4", due:{session:13},
+         desc:"No AI, no analyst reports. Data collection is individual (2 people per airline). Max 3 pages + exhibits; plan a 10-min presentation."},
+        {id:"410-final", code:"MGT 410", title:"FINAL EXAM", category:"Exam",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-12-17", time:"09:00", label:"9 AM–12 PM"},
+         desc:"Closed book, covers all material. Previous exams posted on Canvas."},
+
+        // ---- MGT 411 Customer ----
+        {id:"411-bd", code:"MGT 411", title:"Case write-up: Black & Decker", category:"Case write-up",
+         format:"individual", formatLabel:"Individual", due:{session:3},
+         desc:"Top 4 of 5 write-ups count. 6-hour grace period with a declining grade, then 0."},
+        {id:"411-stickk", code:"MGT 411", title:"Case write-up: stickK.com", category:"Case write-up",
+         format:"individual", formatLabel:"Individual", due:{session:5},
+         desc:"Top 4 of 5 write-ups count."},
+        {id:"411-pepsi", code:"MGT 411", title:"Case write-up: Pepsi", category:"Case write-up",
+         format:"individual", formatLabel:"Individual", due:{session:8},
+         desc:"Top 4 of 5 write-ups count."},
+        {id:"411-aqualisa", code:"MGT 411", title:"Case write-up: Aqualisa", category:"Case write-up",
+         format:"individual", formatLabel:"Individual", due:{session:10},
+         desc:"Top 4 of 5 write-ups count."},
+        {id:"411-medco", code:"MGT 411", title:"Case write-up: The Medicines Company", category:"Case write-up",
+         format:"individual", formatLabel:"Individual", due:{session:12},
+         desc:"Top 4 of 5 write-ups count."},
+        {id:"411-final", code:"MGT 411", title:"FINAL EXAM", category:"Exam",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-12-18", time:"09:00", label:"9–11 AM"},
+         desc:"Short answer, 2 hours. Closed book, closed notes, no cheat sheet."},
+
+        // ---- MGT 412 Investor ----
+        {id:"412-hw1", code:"MGT 412", title:"Homework #1", category:"Homework",
+         format:"group", formatLabel:"Group of ≤4", due:{date:"2026-11-11", time:null},
+         desc:"Pass/fail. One submission per group on Canvas; no late credit."},
+        {id:"412-hw2", code:"MGT 412", title:"Homework #2", category:"Homework",
+         format:"group", formatLabel:"Group of ≤4", due:{date:"2026-11-18", time:null},
+         desc:"Pass/fail. One submission per group; no late credit."},
+        {id:"412-hw3", code:"MGT 412", title:"Homework #3", category:"Homework",
+         format:"group", formatLabel:"Group of ≤4", due:{date:"2026-12-02", time:null},
+         desc:"Pass/fail. One submission per group; no late credit."},
+        {id:"412-hw4", code:"MGT 412", title:"Homework #4", category:"Homework",
+         format:"group", formatLabel:"Group of ≤4", due:{date:"2026-12-09", time:null},
+         desc:"Pass/fail. One submission per group; no late credit."},
+        {id:"412-final", code:"MGT 412", title:"FINAL EXAM", category:"Exam",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-12-21", time:"09:00", label:"9 AM–12 PM"},
+         desc:"Closed book. One handwritten letter-size cheat sheet (both sides). Calculator required."},
+
+        // ---- MGT 413 State & Society ----
+        {id:"413-m1", code:"MGT 413", title:"Memo 1: Theory of Regulation", category:"Analytical memo",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-11-03", time:"23:59"},
+         desc:"Max 650 words + citations. Prompt released on Canvas the day after class."},
+        {id:"413-m2", code:"MGT 413", title:"Memo 2: Angry Populist Politics and Business", category:"Analytical memo",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-11-15", time:"23:59"},
+         desc:"Max 650 words + citations."},
+        {id:"413-m3", code:"MGT 413", title:"Memo 3: Business and the South African Transition", category:"Analytical memo",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-11-22", time:"23:59"},
+         desc:"Max 650 words + citations."},
+        {id:"413-m4", code:"MGT 413", title:"Memo 4: Gender Disparities in the Labor Market", category:"Analytical memo",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-12-08", time:"23:59"},
+         desc:"Max 650 words + citations."},
+        {id:"413-d1", code:"MGT 413", title:"Debate slides: Amazon's Search for HQ2", category:"Debate",
+         format:"team", formatLabel:"LT 1 & 2", team:[1,2], due:{date:"2026-11-04", time:"17:00"},
+         desc:"Debate in class Thu, Nov 5. Slides (if any) due 5 PM the night before."},
+        {id:"413-d2", code:"MGT 413", title:"Debate slides: Zerit's Patent in Developing Countries", category:"Debate",
+         format:"team", formatLabel:"LT 3 & 4", team:[3,4], due:{date:"2026-11-11", time:"17:00"},
+         desc:"Debate in class Thu, Nov 12. Slides (if any) due 5 PM the night before."},
+        {id:"413-d3", code:"MGT 413", title:"Debate slides: Immigration Policy", category:"Debate",
+         format:"team", formatLabel:"LT 5, 6 & 7", team:[5,6,7], due:{date:"2026-12-09", time:"17:00"},
+         desc:"Debate in class Thu, Dec 10 (3-way, rotating rebuttals). Slides due 5 PM the night before."},
+        {id:"413-d4", code:"MGT 413", title:"Debate slides: Privatization (Education Tax Credit)", category:"Debate",
+         format:"team", formatLabel:"LT 8 & 9", team:[8,9], due:{date:"2026-12-14", time:"17:00"},
+         desc:"Debate in class Tue, Dec 15. Slides due 5 PM the night before."},
+        {id:"413-final", code:"MGT 413", title:"FINAL EXAM", category:"Exam",
+         format:"individual", formatLabel:"Individual", due:{date:"2026-12-22", time:"09:00", label:"9 AM–12 PM"},
+         desc:"Short and long answer essays."},
+      ],
+      courses: [
+        {course:"Competitor", code:"MGT 410", room:"Evans 2410", key:"competitor",
+         sections:{
+           Green:{days:["Mo","We"], start:"08:30", end:"09:50"},
+           Blue:{days:["Mo","We"], start:"10:05", end:"11:25"},
+           Gold:{days:["Mo","We"], start:"13:00", end:"14:20"},
+           Red:{days:["Mo","We"], start:"14:35", end:"15:55"},
+           Silver:{days:["Mo","We"], start:"16:10", end:"17:30"},
+         },
+         topics:[
+           "Course Introduction: The Competitor Perspective",
+           "Oligopoly I: Bertrand Competition",
+           "Oligopoly II: Cournot & First-Mover Advantage",
+           "Oligopoly III: Repeated Interactions",
+           "Oligopoly IV: Differentiated Products",
+           "Oligopoly V: Choosing a Differentiation Position",
+           "Double Marginalization & Vertical Contracts",
+           "Competing and Cooperating",
+           "Industry Analysis Framework",
+           "Industry Analysis Case",
+           "Industry Analysis Applied",
+           "Antitrust",
+           "Using Accounting Data to Understand Competitor Strategies",
+         ],
+         final:{date:"2026-12-17", start:"09:00", end:"12:00", room:"TBA"}},
+
+        {course:"Customer", code:"MGT 411", room:"Evans 4200", key:"customer",
+         sections:{
+           Blue:{days:["Mo","We"], start:"08:30", end:"09:50"},
+           Gold:{days:["Mo","We"], start:"10:05", end:"11:25"},
+           Red:{days:["Mo","We"], start:"13:00", end:"14:20"},
+           Silver:{days:["Tu","Th"], start:"08:30", end:"09:50"},
+           Green:{days:["Tu","Th"], start:"10:05", end:"11:25"},
+         },
+         topics:[
+           "Introduction & Framework (5C's–STP–4Ps)",
+           "Segmentation, Targeting & Positioning",
+           "Case: Black & Decker",
+           "Consumer Behavior",
+           "Case: stickK.com",
+           "Understanding Customers: Market Research",
+           "Branding",
+           "Case: Pepsi",
+           "New Product Development",
+           "Case: Aqualisa",
+           "Communicating & Capturing Value (Pricing)",
+           "Case: The Medicines Company",
+           "Putting It Together: CRM & CLV",
+         ],
+         final:{date:"2026-12-18", start:"09:00", end:"11:00", room:"TBA"}},
+
+        {course:"Investor", code:"MGT 412", room:"Evans 2200", key:"investor",
+         sections:{
+           Green:{days:["Mo","We"], start:"10:05", end:"11:25"},
+           Blue:{days:["Mo","We"], start:"13:00", end:"14:20"},
+           Red:{days:["Tu","Th"], start:"10:05", end:"11:25"},
+           Silver:{days:["Tu","Th"], start:"13:00", end:"14:20"},
+           Gold:{days:["Tu","Th"], start:"14:35", end:"15:55"},
+         },
+         topics:[
+           "Overview of Financial Markets",
+           "Returns, Risk, and Prices",
+           "Asset Allocation I: One Risky Asset",
+           "Asset Allocation II: Many Risky Assets",
+           "The CAPM",
+           "Investment Management Industry",
+           "Performance Evaluation",
+           "(In)efficient Markets",
+           "Risk & Return Predictability",
+           "Fixed Income",
+           "Duration and the Fed",
+           "Futures",
+           "Options",
+         ],
+         final:{date:"2026-12-21", start:"09:00", end:"12:00", room:"TBA"}},
+
+        {course:"State & Society", code:"MGT 413", room:"Evans 2410", key:"society",
+         sections:{
+           Red:{days:["Tu","Th"], start:"08:30", end:"09:50"},
+           Silver:{days:["Tu","Th"], start:"10:05", end:"11:25"},
+           Green:{days:["Tu","Th"], start:"13:00", end:"14:20"},
+           Blue:{days:["Tu","Th"], start:"14:35", end:"15:55"},
+           Gold:{days:["Tu","Th"], start:"16:10", end:"17:30"},
+         },
+         topics:[
+           "The State and Society Agenda",
+           "Theory of Regulation",
+           "Guest: Kamal Quadir (bKash): Tech Solutions to Social Problems",
+           "Weak States & Incomplete Contracts (Debate LT 1–2)",
+           "Angry Populist Politics and Business",
+           "IP Protection and Zerit (Debate LT 3–4)",
+           "Business and the South African Transition",
+           "When Firms Provide What States Do Not",
+           "Governing the Infrastructure of AI",
+           "Gender Discrimination & Labor Markets",
+           "Guest: Dean Kerwin Charles: Race & Economic Opportunity",
+           "Immigration Policy (Debate LT 5–7)",
+           "Privatization of Core Government Functions (Debate LT 8–9)",
+         ],
+         special:{
+           11:{date:"2026-12-08", start:"16:10", end:"18:00", room:"Zhang Auditorium",
+               note:"All cohorts together. Regular sections don't meet; arrive by 4:00 PM."}
+         },
+         final:{date:"2026-12-22", start:"09:00", end:"12:00", room:"TBA"}},
+      ],
+    },
+  },
+};
+
+/* =====================================================================
+   Analytics hook — no-op for now. Wire to PostHog / GoatCounter / etc.
+   e.g. posthog.capture(event, props)
+   ===================================================================== */
+function track(event, props = {}){
+  (window.__scheduleEvents = window.__scheduleEvents || []).push({event, props, t: Date.now()});
+}
+
+/* ---------------- constants & helpers ---------------- */
+const COLOR = {};
+["competitor","customer","investor","society"].forEach(k=>{
+  COLOR[k] = {fg:`var(--c-${k})`, bg:`var(--c-${k}-bg)`};
+});
+
+const DAYS = ["Mo","Tu","We","Th","Fr"];
+const DAY_LABEL = {Mo:"Monday",Tu:"Tuesday",We:"Wednesday",Th:"Thursday",Fr:"Friday"};
+const DAY_SHORT = ["Mon","Tue","Wed","Thu","Fri"];
+
+const DAY_START = 8*60;   // 8:00
+const DAY_END   = 18*60;  // 18:00
+const HOUR_PX   = 52;
+const PX_PER_MIN = HOUR_PX/60;
+
+function toMin(hhmm){
+  const [h,m] = hhmm.split(":").map(Number);
+  return h*60+m;
+}
+function fmt(hhmm){
+  const [h,m] = hhmm.split(":").map(Number);
+  const period = h>=12 ? "PM":"AM";
+  let hh = h%12; if(hh===0) hh=12;
+  return hh + (m? ":"+String(m).padStart(2,"0") : "") + " " + period;
+}
+function parseISO(s){ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); }
+function iso(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function md(s){ const d=parseISO(s); return `${d.getMonth()+1}/${d.getDate()}`; }
+function niceDate(s){ return parseISO(s).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
+function weekdayIdx(s){ return (parseISO(s).getDay()+6)%7; } // Mon=0
+function groupOf(sec){ return sec.days.includes("Mo") ? "MW" : "TT"; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function overlaps(a,b){ return a.start < b.end && b.start < a.end; }
+function cohortDot(c){ return `<span class="cdot" style="background:${CONFIG.cohortDot[c]}"></span>`; }
+function hasCalendar(term){ return !!term.calendar; }
+
+/* ---------------- state ---------------- */
+const STORE_KEY = "som-core-schedule-v1";
+// localStorage can be blocked (sandboxed iframes, some privacy modes) — fall back to in-memory.
+const store = (()=>{
+  try { localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return localStorage; }
+  catch { const m = {}; return {getItem:k=>m[k]??null, setItem:(k,v)=>{m[k]=String(v);}}; }
+})();
+const state = Object.assign({
+  term: CONFIG.defaultTerm,
+  cohort: CONFIG.cohorts[0],
+  view: "week",
+  overlayCourses: [],                 // course codes
+  overlayCohorts: [...CONFIG.cohorts],
+  weekIdx: null,
+  swaps: {},                          // {termId: {code: {n: cohort}}}
+  tab: "schedule",                    // schedule | tasks
+  tracker: {},                        // {assignmentId: {done, doneAt, date, time, note, removed}}
+  customTasks: [],                    // user-added assignments (same shape as CONFIG assignments, plus term)
+  tf: {courses:[], format:"all", hideDone:false, showRemoved:false},
+  team: null,
+},JSON.parse(store.getItem(STORE_KEY) || "{}"));
+
+// URL hash overrides (share links): #t=fall2&c=Gold&v=week&o=MGT 412,MGT 411&oc=Blue,Red
+(function readHash(){
+  if(!location.hash) return;
+  const p = new URLSearchParams(location.hash.slice(1));
+  if(p.get("t") && CONFIG.terms[p.get("t")]) state.term = p.get("t");
+  if(p.get("c") && CONFIG.cohorts.includes(p.get("c"))) state.cohort = p.get("c");
+  if(p.get("v")) state.view = p.get("v");
+  if(p.has("o")) state.overlayCourses = p.get("o").split(",").filter(Boolean);
+  if(p.has("oc")) state.overlayCohorts = p.get("oc").split(",").filter(c=>CONFIG.cohorts.includes(c));
+  track("open_shared_link", {term:state.term, cohort:state.cohort});
+})();
+
+if(!CONFIG.terms[state.term]){ state.term = CONFIG.defaultTerm; state.weekIdx = null; }  // e.g. a removed term in saved state
+
+function save(){ store.setItem(STORE_KEY, JSON.stringify(state)); }
+function term(){ return CONFIG.terms[state.term]; }
+function termSwaps(){ return (state.swaps[state.term] = state.swaps[state.term] || {}); }
+function getSwap(code,n){ return termSwaps()[code]?.[n] || null; }
+function setSwap(code,n,cohort){
+  const s = termSwaps();
+  if(!cohort || cohort===state.cohort){
+    if(s[code]){ delete s[code][n]; if(!Object.keys(s[code]).length) delete s[code]; }
+  } else {
+    (s[code] = s[code] || {})[n] = cohort;
+  }
+  save();
+}
+
+/* ---------------- schedule model ---------------- */
+function sessionDate(t, course, sec, n){
+  return (course.dates && course.dates[groupOf(sec)]?.[n-1]) || t.calendar[groupOf(sec)][n-1];
+}
+function breakFor(t, dateStr){
+  return (t.breaks||[]).find(b => dateStr >= b.from && dateStr <= b.to);
+}
+
+// All events the user will actually attend (plus skipped placeholders) for a dated term.
+function effectiveEvents(t){
+  const out = [];
+  t.courses.forEach(c=>{
+    const mine = c.sections[state.cohort];
+    (c.topics||[]).forEach((topic,i)=>{
+      const n = i+1;
+      const sp = c.special?.[n];
+      if(sp){
+        out.push({kind:"special", course:c, n, topic, date:sp.date, start:toMin(sp.start), end:toMin(sp.end),
+                  s:sp.start, e:sp.end, room:sp.room, note:sp.note});
+        return;
+      }
+      if(!mine) return;
+      const swapTo = getSwap(c.code, n);
+      const ownDate = sessionDate(t,c,mine,n);
+      const own = {course:c, n, topic, cohort:state.cohort, date:ownDate, start:toMin(mine.start), end:toMin(mine.end),
+                   s:mine.start, e:mine.end, room:c.room};
+      if(swapTo && c.sections[swapTo]){
+        const alt = c.sections[swapTo];
+        out.push({...own, kind:"skipped", swapTo});
+        out.push({kind:"swapped", course:c, n, topic, cohort:swapTo, date:sessionDate(t,c,alt,n),
+                  start:toMin(alt.start), end:toMin(alt.end), s:alt.start, e:alt.end, room:c.room});
+      } else {
+        out.push({...own, kind:"own"});
+      }
+    });
+    if(c.final){
+      out.push({kind:"final", course:c, n:null, topic:"Final exam", date:c.final.date,
+                start:toMin(c.final.start), end:toMin(c.final.end), s:c.final.start, e:c.final.end, room:c.final.room});
+    }
+  });
+  return out;
+}
+
+function attending(ev){ return ev.kind !== "skipped"; }
+
+// Conflicts for a candidate slot against what you're attending, ignoring one course-session.
+function conflictsFor(events, date, start, end, ignoreCode, ignoreN){
+  return events.filter(e => attending(e) && e.date===date && overlaps(e,{start,end})
+                         && !(e.course.code===ignoreCode && e.n===ignoreN));
+}
+
+/* ---------------- grid renderer ---------------- */
+// cols: [{label, sub, today, off}], blocks: [{col, start, end, kind, html, course, cohort, click, title, conflict}]
+function renderGrid(calEl, cols, blocks){
+  const bodyHeight = (DAY_END-DAY_START) * PX_PER_MIN;
+  let html = `<div class="cal-head"><div></div>`;
+  cols.forEach(c=> html += `<div class="${c.today?"today":""}">${esc(c.label)}${c.sub?`<small>${esc(c.sub)}</small>`:""}</div>`);
+  html += `</div><div class="cal-body" style="height:${bodyHeight}px">`;
+
+  html += `<div class="time-col">`;
+  for(let t=DAY_START; t<=DAY_END; t+=60){
+    const h = Math.floor(t/60);
+    let hh = h%12; if(hh===0) hh=12;
+    html += `<div class="slot" style="height:${HOUR_PX}px">${hh} ${h>=12?"PM":"AM"}</div>`;
+  }
+  html += `</div>`;
+
+  cols.forEach((col, ci)=>{
+    html += `<div class="day-col ${col.off?"off":""}">`;
+    for(let t=DAY_START; t<DAY_END; t+=60) html += `<div class="gridline" style="height:${HOUR_PX}px"></div>`;
+    if(col.off) html += `<div class="off-label">${esc(col.off)}</div>`;
+
+    // lane packing: overlapping blocks sit side by side
+    const mine = blocks.filter(b=>b.col===ci).sort((a,b)=> a.start-b.start || a.rank-b.rank);
+    const clusters = [];
+    mine.forEach(b=>{
+      const cl = clusters[clusters.length-1];
+      if(cl && b.start < cl.end){ cl.items.push(b); cl.end = Math.max(cl.end,b.end); }
+      else clusters.push({end:b.end, items:[b]});
+    });
+    clusters.forEach(cl=>{
+      const laneEnds = [];
+      cl.items.forEach(b=>{
+        let lane = laneEnds.findIndex(e=> e <= b.start);
+        if(lane===-1){ lane = laneEnds.length; laneEnds.push(0); }
+        laneEnds[lane] = b.end; b.lane = lane;
+      });
+      const n = laneEnds.length;
+      cl.items.forEach(b=>{
+        const top = (b.start - DAY_START) * PX_PER_MIN;
+        const height = (b.end - b.start) * PX_PER_MIN;
+        const w = 100/n;
+        const col = COLOR[b.course.key];
+        const style = `top:${top}px;height:${height}px;left:calc(${b.lane*w}% + 3px);width:calc(${w}% - 6px);`+
+                      `background:${col.bg};border-left-color:${col.fg};color:${col.fg}`;
+        const cls = ["block", b.kind, b.conflict?"conflict":"", b.ownConflict?"conflict-own":"", b.click?"clickable":""].join(" ");
+        const data = b.click ? `data-code="${esc(b.course.code)}" data-n="${b.n}"` : "";
+        html += `<div class="${cls}" style="${style}" ${data} title="${esc(b.title||"")}">${b.html}</div>`;
+      });
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  calEl.innerHTML = html;
+}
+
+const RANK = {final:0, special:0, own:1, swapped:1, skipped:2, ghost:3};
+
+/* ---------------- views ---------------- */
+function renderPattern(){
+  const t = term();
+  const cols = DAYS.map(d=>({label:DAY_LABEL[d]}));
+  const own = [], ghosts = [];
+  t.courses.forEach(c=>{
+    const sec = c.sections[state.cohort];
+    if(!sec) return;
+    sec.days.forEach(d=>{
+      const col = DAYS.indexOf(d);
+      own.push({col, start:toMin(sec.start), end:toMin(sec.end), kind:"own", rank:RANK.own, course:c,
+        title:`${c.course} · ${state.cohort} · ${fmt(sec.start)}–${fmt(sec.end)} · ${c.room}`,
+        html:`<span class="t">${esc(c.course)}</span><span class="m">${fmt(sec.start)}–${fmt(sec.end)}</span><span class="m">${esc(c.room)}</span>`});
+    });
+  });
+  t.courses.forEach(c=>{
+    if(!state.overlayCourses.includes(c.code)) return;
+    state.overlayCohorts.forEach(co=>{
+      if(co===state.cohort) return;
+      const sec = c.sections[co];
+      if(!sec) return;
+      sec.days.forEach(d=>{
+        const col = DAYS.indexOf(d);
+        const b = {col, start:toMin(sec.start), end:toMin(sec.end), kind:"ghost", rank:RANK.ghost, course:c};
+        b.conflict = own.some(o=>o.col===col && o.course!==c && overlaps(o,b));
+        b.title = `${c.course} · ${co} section · ${fmt(sec.start)}–${fmt(sec.end)}${b.conflict?" · conflicts with your schedule":""}`;
+        b.html = `<span class="t">${b.conflict?"⚠ ":""}${esc(c.course)}</span><span class="m">${cohortDot(co)}${co}</span><span class="m">${fmt(sec.start)}–${fmt(sec.end)}</span>`;
+        ghosts.push(b);
+      });
+    });
+  });
+  renderGrid(document.getElementById("cal"), cols, own.concat(ghosts));
+  document.getElementById("hint").textContent = hasCalendar(t)
+    ? "Dashed blocks are other cohorts' sections. Switch to “Calendar by week” to swap a specific session."
+    : "Dashed blocks are other cohorts' sections.";
+}
+
+function weekCount(t){
+  return Math.round((parseISO(t.lastWeek) - parseISO(t.firstWeek)) / (7*864e5)) + 1;
+}
+function defaultWeekIdx(t){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const idx = Math.floor((today - parseISO(t.firstWeek)) / (7*864e5));
+  return Math.max(0, Math.min(weekCount(t)-1, idx));
+}
+
+function renderWeek(){
+  const t = term();
+  if(state.weekIdx==null || state.weekIdx >= weekCount(t)) state.weekIdx = defaultWeekIdx(t);
+  const monday = addDays(parseISO(t.firstWeek), state.weekIdx*7);
+  const dates = [0,1,2,3,4].map(i=> iso(addDays(monday,i)));
+  const todayISO = iso(new Date());
+
+  document.getElementById("weekTitle").textContent =
+    `Week ${state.weekIdx+1} · ${niceDate(dates[0]).replace(/^\w+, /,"")} – ${niceDate(dates[4]).replace(/^\w+, /,"")}`;
+  document.getElementById("prevWeek").disabled = state.weekIdx===0;
+  document.getElementById("nextWeek").disabled = state.weekIdx===weekCount(t)-1;
+
+  const cols = dates.map((d,i)=>{
+    const br = breakFor(t,d);
+    return {label:DAY_SHORT[i], sub:md(d), today:d===todayISO, off: br ? br.label : null};
+  });
+
+  const events = effectiveEvents(t);
+  const blocks = [];
+
+  events.forEach(ev=>{
+    const col = dates.indexOf(ev.date);
+    if(col===-1) return;
+    const c = ev.course;
+    const b = {col, start:ev.start, end:ev.end, kind:ev.kind, rank:RANK[ev.kind], course:c, n:ev.n};
+    const time = `${fmt(ev.s)}–${fmt(ev.e)}`;
+    if(ev.kind==="final"){
+      b.title = `${c.course} final exam · ${time}`;
+      b.html = `<span class="t">${esc(c.course)} Final</span><span class="m">${time}</span><span class="m">${esc(ev.room)}</span>`;
+    } else if(ev.kind==="special"){
+      b.click = true;
+      b.title = `${c.course} S${ev.n}: ${ev.topic} · ${ev.note}`;
+      b.html = `<span class="t">${esc(c.course)} · S${ev.n}</span><span class="m">${time}</span><span class="m">${esc(ev.room)}</span>`+
+               `<span class="badge">All cohorts</span><span class="tp">${esc(ev.topic)}</span>`;
+    } else if(ev.kind==="skipped"){
+      b.click = true;
+      b.title = `Skipping your ${ev.cohort} section of ${c.course} S${ev.n}; attending ${ev.swapTo}`;
+      b.html = `<span class="t">${esc(c.course)} · S${ev.n}</span><span class="m">${time}</span><span class="badge">Skipped → ${esc(ev.swapTo)}</span>`;
+    } else {
+      b.click = true;
+      const others = conflictsFor(events, ev.date, ev.start, ev.end, c.code, ev.n);
+      b.ownConflict = others.length>0;
+      b.title = `${c.course} S${ev.n}: ${ev.topic} · ${ev.cohort} section · ${time} · ${ev.room}` +
+                (b.ownConflict ? ` · ⚠ conflicts with ${others.map(o=>o.course.course).join(", ")}` : "") + " · click to swap section";
+      b.html = `<span class="t">${b.ownConflict?"⚠ ":""}${esc(c.course)} · S${ev.n}</span><span class="m">${time}</span><span class="m">${esc(ev.room)}</span>`+
+               (ev.kind==="swapped" ? `<span class="badge">${cohortDot(ev.cohort)}↔ ${esc(ev.cohort)} section</span>` : "")+
+               `<span class="tp">${esc(ev.topic)}</span>`;
+    }
+    blocks.push(b);
+  });
+
+  // ghost overlays: other cohorts' sections of the same session
+  t.courses.forEach(c=>{
+    if(!state.overlayCourses.includes(c.code) || !c.topics) return;
+    c.topics.forEach((topic,i)=>{
+      const n = i+1;
+      if(c.special?.[n]) return;
+      const swapTo = getSwap(c.code,n);
+      state.overlayCohorts.forEach(co=>{
+        if(co===state.cohort || co===swapTo) return;
+        const sec = c.sections[co];
+        if(!sec) return;
+        const d = sessionDate(t,c,sec,n);
+        const col = dates.indexOf(d);
+        if(col===-1) return;
+        const b = {col, start:toMin(sec.start), end:toMin(sec.end), kind:"ghost", rank:RANK.ghost, course:c, n, click:true};
+        const clash = conflictsFor(events, d, b.start, b.end, c.code, n);
+        b.conflict = clash.length>0;
+        b.title = `${c.course} S${n} · ${co} section · ${fmt(sec.start)}–${fmt(sec.end)}` +
+                  (b.conflict ? ` · ⚠ conflicts with ${clash.map(o=>o.course.course).join(", ")}` : " · free") + " · click to swap";
+        b.html = `<span class="t">${b.conflict?"⚠ ":""}${esc(c.course)} · S${n}</span><span class="m">${cohortDot(co)}${co}</span><span class="m">${fmt(sec.start)}–${fmt(sec.end)}</span>`;
+        blocks.push(b);
+      });
+    });
+  });
+
+  renderGrid(document.getElementById("cal"), cols, blocks);
+  document.getElementById("hint").textContent =
+    "Click any of your classes (or a dashed alternative) to attend a different cohort's section for that session.";
+}
+
+/* ---------------- swap sheet ---------------- */
+function openSwap(code, n){
+  const t = term();
+  const c = t.courses.find(x=>x.code===code);
+  const topic = c.topics[n-1];
+  const sheet = document.getElementById("sheet");
+  const sp = c.special?.[n];
+  let body;
+
+  if(sp){
+    body = `<div class="notice">${esc(sp.note)}</div>
+      <div class="opts"><div class="opt"><div><div class="who">${esc(sp.room)}</div>
+      <div class="when">${niceDate(sp.date)} · ${fmt(sp.start)}–${fmt(sp.end)}</div></div>
+      <span class="tag mine">Everyone</span></div></div>`;
+  } else {
+    const events = effectiveEvents(t);
+    const current = getSwap(code,n) || state.cohort;
+    const todayISO = iso(new Date());
+    const opts = CONFIG.cohorts.filter(co=>c.sections[co]).map(co=>{
+      const sec = c.sections[co];
+      const d = sessionDate(t,c,sec,n);
+      return {co, sec, d, start:toMin(sec.start), end:toMin(sec.end)};
+    }).sort((a,b)=> a.d.localeCompare(b.d) || a.start-b.start);
+
+    body = `<div class="opts">` + opts.map(o=>{
+        const clash = conflictsFor(events, o.d, o.start, o.end, code, n);
+        const isMine = o.co===state.cohort, isGoing = o.co===current;
+        const tags = [
+          isMine ? `<span class="tag mine">Your section</span>` : "",
+          isGoing && !isMine ? `<span class="tag going">Attending</span>` : "",
+          clash.length ? `<span class="tag bad">⚠ ${esc(clash.map(x=>x.course.course).join(", "))}</span>`
+                       : (!isMine ? `<span class="tag ok">Free</span>` : ""),
+          o.d < todayISO ? `<span class="tag past">Past</span>` : "",
+        ].join("");
+        const btn = isGoing
+          ? `<button class="btn" disabled>${isMine?"Default":"Selected"}</button>`
+          : `<button class="btn ${isMine?"":"primary"}" data-pick="${o.co}">${isMine?"Go back to mine":"Attend this"}</button>`;
+        return `<div class="opt"><div>
+            <div class="who">${cohortDot(o.co)}${o.co}${tags}</div>
+            <div class="when">${niceDate(o.d)} · ${fmt(o.sec.start)}–${fmt(o.sec.end)} · ${esc(c.room)}</div>
+          </div>${btn}</div>`;
+      }).join("") + `</div>`;
+  }
+
+  sheet.innerHTML = `<div class="hd">
+      <p class="eyebrow">${esc(c.code)} · Session ${n}</p>
+      <h2>${esc(c.course)}</h2>
+      <div class="topic">${esc(topic)}</div>
+      <button class="close" aria-label="Close">×</button>
+    </div>${body}`;
+  sheet.querySelector(".close").onclick = closeSwap;
+  sheet.querySelectorAll("[data-pick]").forEach(b=> b.onclick = ()=>{
+    const co = b.dataset.pick;
+    setSwap(code, n, co);
+    track(co===state.cohort ? "swap_removed" : "swap_added", {course:code, session:n, from:state.cohort, to:co});
+    closeSwap();
+    render();
+    toast(co===state.cohort ? "Back to your own section" : `Attending ${co} for ${c.course} S${n}`);
+  });
+  document.getElementById("scrim").classList.add("open");
+  track("swap_opened", {course:code, session:n});
+}
+function closeSwap(){ document.getElementById("scrim").classList.remove("open"); }
+
+/* ---------------- swaps list ---------------- */
+function renderSwapsList(){
+  const t = term();
+  const box = document.getElementById("swapsBox");
+  if(!hasCalendar(t)){ box.style.display="none"; return; }
+  box.style.display = "";
+  const ul = document.getElementById("swapsList");
+  const events = effectiveEvents(t);
+  const items = events.filter(e=>e.kind==="swapped").sort((a,b)=> a.date.localeCompare(b.date));
+  if(!items.length){
+    ul.innerHTML = `<li class="empty">No swaps yet. You're attending all your ${esc(state.cohort)} sections.</li>`;
+    return;
+  }
+  ul.innerHTML = items.map(ev=>{
+    const c = ev.course, mine = c.sections[state.cohort];
+    const fromDate = sessionDate(t,c,mine,ev.n);
+    const clash = conflictsFor(events, ev.date, ev.start, ev.end, c.code, ev.n);
+    return `<li><div><b>${esc(c.course)} S${ev.n}</b> · ${esc(ev.topic)}<br>
+        <span class="when" style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)">
+        ${cohortDot(state.cohort)}${niceDate(fromDate)} ${fmt(mine.start)}<span class="arrow">→</span>${cohortDot(ev.cohort)}${esc(ev.cohort)} · ${niceDate(ev.date)} ${fmt(ev.s)}</span>
+        ${clash.length?`<span class="warn">⚠ conflicts with ${esc(clash.map(x=>x.course.course).join(", "))}</span>`:""}</div>
+      <div class="ctl-group"><button class="btn" data-goto="${ev.date}">Show</button>
+      <button class="btn" data-undo="${esc(c.code)}|${ev.n}">Undo</button></div></li>`;
+  }).join("") + `<li><span></span><button class="btn" id="clearSwaps">Clear all swaps</button></li>`;
+
+  ul.querySelectorAll("[data-undo]").forEach(b=> b.onclick = ()=>{
+    const [code,n] = b.dataset.undo.split("|");
+    setSwap(code, Number(n), null);
+    track("swap_removed", {course:code, session:Number(n), via:"list"});
+    render();
+  });
+  ul.querySelectorAll("[data-goto]").forEach(b=> b.onclick = ()=>{
+    state.view = "week";
+    state.weekIdx = Math.floor((parseISO(b.dataset.goto) - parseISO(t.firstWeek)) / (7*864e5));
+    save(); render();
+    document.getElementById("cal").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  document.getElementById("clearSwaps").onclick = ()=>{
+    if(!confirm("Clear all section swaps for this term?")) return;
+    state.swaps[state.term] = {};
+    track("swaps_cleared");
+    save(); render();
+  };
+}
+
+/* ---------------- controls ---------------- */
+function renderControls(){
+  const t = term();
+
+  const terms = Object.entries(CONFIG.terms);
+  const tabs = document.getElementById("termTabs");
+  tabs.style.display = terms.length > 1 ? "" : "none";   // tabs only when there's more than one term
+  tabs.innerHTML = terms.map(([id,tm])=>
+    `<button data-term="${id}" class="${id===state.term?"active":""}">${esc(tm.label)}</button>`).join("");
+  document.getElementById("eyebrow").textContent = `Yale School of Management · Class of 2027 · ${t.label}`;
+
+  document.getElementById("cohortPills").innerHTML = CONFIG.cohorts.map(co=>
+    `<button class="pill ${co===state.cohort?"active":""}" data-cohort="${co}"><span class="dot" style="background:${CONFIG.cohortDot[co]}"></span>${co}</button>`).join("");
+
+  if(!hasCalendar(t) && state.view==="week") state.view = "pattern";
+  document.querySelectorAll("#viewSeg button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.view===state.view);
+    b.disabled = b.dataset.view==="week" && !hasCalendar(t);
+    b.title = b.disabled ? "No dated session calendar for this term" : "";
+  });
+
+  const allOn = t.courses.every(c=>state.overlayCourses.includes(c.code));
+  document.getElementById("overlayCourses").innerHTML = t.courses.map(c=>
+    `<button class="pill course ${state.overlayCourses.includes(c.code)?"active":""}" data-ocourse="${esc(c.code)}"
+       style="--chip-fg:${COLOR[c.key].fg};--chip-bg:${COLOR[c.key].bg}">
+       <span class="sw" style="background:${COLOR[c.key].fg}"></span>${esc(c.course)}</button>`).join("") +
+    `<button class="pill link" data-ocourse="*">${allOn?"None":"All"}</button>`;
+
+  document.getElementById("overlayCohorts").innerHTML = CONFIG.cohorts.map(co=>{
+    const isMine = co===state.cohort;
+    return `<button class="pill ${state.overlayCohorts.includes(co)&&!isMine?"active":""}" data-ocohort="${co}" ${isMine?"disabled title='Your cohort'":""}>
+      <span class="dot" style="background:${CONFIG.cohortDot[co]}"></span>${co}</button>`;
+  }).join("");
+
+  document.getElementById("weekNav").style.display = state.view==="week" ? "" : "none";
+  document.getElementById("icsBtn").disabled = !hasCalendar(t);
+
+  const legend = t.courses.map(c=>`<span><i style="background:${COLOR[c.key].fg}"></i>${esc(c.course)}</span>`).join("") +
+    `<span><i style="border:1.5px dashed var(--faint);background:#fff"></i>Other cohort's section</span>` +
+    (state.view==="week" ? `<span><i style="background:repeating-linear-gradient(135deg,#ccc 0 3px,#fff 3px 6px)"></i>Skipped</span>
+       <span><i style="background:var(--ink)"></i>Final exam</span>` : "") +
+    `<span>⚠ Time conflict</span>`;
+  document.getElementById("legend").innerHTML = legend;
+
+  document.getElementById("footer").textContent = t.courses.map(c=>`${c.code} ${c.course}`).join(" · ") +
+    " — Times from the course syllabi; confirm changes on Canvas.";
+}
+
+function render(){
+  if(!term().assignments && state.tab==="tasks") state.tab = "schedule";
+  document.querySelectorAll("#appTabs button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tab===state.tab);
+    b.style.display = b.dataset.tab==="tasks" && !term().assignments ? "none" : "";
+  });
+  const onTasks = state.tab==="tasks";
+  document.getElementById("scheduleView").style.display = onTasks ? "none" : "";
+  document.getElementById("tasksView").style.display = onTasks ? "" : "none";
+  renderControls();
+  if(onTasks){ renderTasks(); return; }
+  if(state.view==="week") renderWeek(); else renderPattern();
+  renderSwapsList();
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", e=>{
+  const el = e.target.closest("button, .block.clickable");
+  if(!el) return;
+  const d = el.dataset;
+
+  if(d.tab){ state.tab = d.tab; track("tab_changed",{tab:d.tab}); }
+  else if(d.term){ state.term = d.term; state.weekIdx = null; track("term_changed",{term:d.term}); }
+  else if(d.cohort){ state.cohort = d.cohort; track("cohort_changed",{cohort:d.cohort}); }
+  else if(d.view && !el.disabled){ state.view = d.view; track("view_changed",{view:d.view}); }
+  else if(d.ocourse){
+    const codes = term().courses.map(c=>c.code);
+    if(d.ocourse==="*"){
+      const allOn = codes.every(c=>state.overlayCourses.includes(c));
+      state.overlayCourses = allOn ? state.overlayCourses.filter(c=>!codes.includes(c))
+                                   : [...new Set(state.overlayCourses.concat(codes))];
+    } else {
+      const i = state.overlayCourses.indexOf(d.ocourse);
+      i===-1 ? state.overlayCourses.push(d.ocourse) : state.overlayCourses.splice(i,1);
+    }
+    track("overlay_courses_changed",{courses:state.overlayCourses});
+  }
+  else if(d.ocohort){
+    const i = state.overlayCohorts.indexOf(d.ocohort);
+    i===-1 ? state.overlayCohorts.push(d.ocohort) : state.overlayCohorts.splice(i,1);
+    track("overlay_cohorts_changed",{cohorts:state.overlayCohorts});
+  }
+  else if(el.classList.contains("block") && d.code){ openSwap(d.code, Number(d.n)); return; }
+  else return;
+
+  save(); render();
+});
+
+document.getElementById("prevWeek").onclick = ()=>{ state.weekIdx--; save(); render(); };
+document.getElementById("nextWeek").onclick = ()=>{ state.weekIdx++; save(); render(); };
+document.getElementById("thisWeek").onclick = ()=>{ state.weekIdx = defaultWeekIdx(term()); save(); render(); };
+document.getElementById("scrim").addEventListener("click", e=>{ if(e.target.id==="scrim") closeSwap(); });
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape") closeSwap();
+  if(document.getElementById("scrim").classList.contains("open") || state.view!=="week") return;
+  if(e.key==="ArrowLeft" && state.weekIdx>0){ state.weekIdx--; save(); render(); }
+  if(e.key==="ArrowRight" && state.weekIdx<weekCount(term())-1){ state.weekIdx++; save(); render(); }
+});
+
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(()=>el.classList.remove("show"), 2200);
+}
+
+document.getElementById("shareBtn").onclick = async ()=>{
+  const p = new URLSearchParams({t:state.term, c:state.cohort, v:state.view,
+    o:state.overlayCourses.join(","), oc:state.overlayCohorts.join(",")});
+  const url = location.href.split("#")[0] + "#" + p.toString();
+  try { await navigator.clipboard.writeText(url); toast("Share link copied"); }
+  catch { prompt("Copy this link:", url); }
+  track("share_link_copied", {cohort:state.cohort});
+};
+
+/* ---------------- .ics export ---------------- */
+function icsText(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n"); }
+function icsDT(date, hhmm){ return date.replace(/-/g,"") + "T" + hhmm.replace(":","") + "00"; }
+
+document.getElementById("icsBtn").onclick = ()=>{
+  const t = term();
+  const stamp = new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
+  const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//SOM Core Schedule Planner//EN","CALSCALE:GREGORIAN",
+                 `X-WR-CALNAME:SOM ${t.label} · ${state.cohort}`];
+  effectiveEvents(t).filter(attending).forEach(ev=>{
+    const c = ev.course;
+    const summary = ev.kind==="final" ? `${c.course} Final Exam`
+                  : `${c.course} S${ev.n}` + (ev.kind==="swapped" ? ` (${ev.cohort} section)` : "");
+    const desc = [ev.topic, ev.note, ev.kind==="swapped" ? `Swapped from your ${state.cohort} section.` : ""]
+                 .filter(Boolean).join("\n");
+    lines.push("BEGIN:VEVENT",
+      `UID:${state.term}-${c.code.replace(/\s/g,"")}-${ev.n||"final"}-${state.cohort}@som-schedule`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART:${icsDT(ev.date, ev.s)}`,
+      `DTEND:${icsDT(ev.date, ev.e)}`,
+      `SUMMARY:${icsText(summary)}`,
+      `LOCATION:${icsText(ev.room||"")}`,
+      `DESCRIPTION:${icsText(desc)}`,
+      "END:VEVENT");
+  });
+  lines.push("END:VCALENDAR");
+  const blob = new Blob([lines.join("\r\n")], {type:"text/calendar"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `som-${state.term}-${state.cohort.toLowerCase()}.ics`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  track("ics_exported", {cohort:state.cohort, swaps:Object.values(termSwaps()).reduce((n,o)=>n+Object.keys(o).length,0)});
+};
+
+/* =====================================================================
+   ASSIGNMENTS TRACKER
+   ===================================================================== */
+const tkEditing = {date:null, note:null};   // id of the row whose date / note is open
+
+function courseByCode(code){ return term().courses.find(c=>c.code===code); }
+function tkState(id){ return (state.tracker[id] = state.tracker[id] || {}); }
+function tkPrune(id){
+  const o = state.tracker[id];
+  if(o && !Object.values(o).some(v=>v!==undefined && v!==null && v!=="" && v!==false)) delete state.tracker[id];
+}
+
+function allTasks(){
+  const t = term();
+  return (t.assignments||[]).concat(state.customTasks.filter(a=>a.term===state.term).map(a=>({...a, custom:true})));
+}
+
+// The syllabus deadline, before any of your edits.
+function baseDue(a){
+  if(a.due.session){
+    const t = term(), c = courseByCode(a.code), n = a.due.session;
+    const sp = c.special?.[n];
+    if(sp) return {date:sp.date, time:sp.start, label:"before class"};
+    const co = getSwap(c.code, n) || state.cohort;
+    const sec = c.sections[co];
+    return {date:sessionDate(t,c,sec,n), time:sec.start, label: co===state.cohort ? "before class" : `before class (${co} section)`};
+  }
+  return {date:a.due.date, time:a.due.time ?? null, label:a.due.label || ""};
+}
+function resolveDue(a){
+  const base = baseDue(a), o = state.tracker[a.id] || {};
+  if(o.date) return {date:o.date, time: o.time===undefined ? base.time : o.time, label:"", moved:true, base};
+  return base;
+}
+function dueStamp(d){ return parseISO(d.date).getTime() + (d.time ? toMin(d.time) : 23*60+59) * 60000; }
+function relTime(ms){
+  const h = Math.round(ms/36e5);
+  if(Math.abs(h) < 24) return h>=0 ? `in ${h}h` : `${-h}h ago`;
+  const d = Math.round(h/24);
+  return d>=0 ? `in ${d} day${d===1?"":"s"}` : `${-d} day${d===-1?"":"s"} ago`;
+}
+function teamVisible(a){ return !a.team || state.team==null || a.team.includes(state.team); }
+
+function renderTasks(){
+  const t = term();
+  const now = Date.now();
+  const f = state.tf;
+
+  // ---- controls ----
+  const allOn = t.courses.every(c=>f.courses.length===0 || f.courses.includes(c.code));
+  document.getElementById("tkCourses").innerHTML = t.courses.map(c=>{
+    const on = f.courses.length===0 || f.courses.includes(c.code);
+    return `<button class="pill course ${on?"active":""}" data-tk-course="${esc(c.code)}"
+       style="--chip-fg:${COLOR[c.key].fg};--chip-bg:${COLOR[c.key].bg}">
+       <span class="sw" style="background:${COLOR[c.key].fg}"></span>${esc(c.course)}</button>`;
+  }).join("") + (f.courses.length ? `<button class="pill link" data-tk-course="*">All</button>` : "");
+  document.querySelectorAll("#tkFormat button").forEach(b=> b.classList.toggle("active", b.dataset.tkFormat===f.format));
+  document.getElementById("tkHideDone").checked = f.hideDone;
+  document.getElementById("tkShowRemoved").checked = f.showRemoved;
+  document.getElementById("tkTeam").innerHTML = `<option value="">Not set (show all)</option>` +
+    (t.teams||[]).map(n=>`<option value="${n}" ${state.team===n?"selected":""}>${esc(t.teamLabel||"Team")} ${n}</option>`).join("");
+
+  // ---- data ----
+  const tasks = allTasks().filter(teamVisible).map(a=>{
+    const due = resolveDue(a);
+    const o = state.tracker[a.id] || {};
+    return {a, due, o, stamp:dueStamp(due), done:!!o.done, removed:!!o.removed};
+  }).sort((x,y)=> x.stamp-y.stamp || x.a.code.localeCompare(y.a.code));
+
+  const active = tasks.filter(x=>!x.removed);
+  const doneN = active.filter(x=>x.done).length;
+  const next = active.filter(x=>!x.done && x.stamp>=now)[0];
+  const late = active.filter(x=>!x.done && x.stamp<now);
+  const weekEnd = now + 7*864e5;
+  const thisWeek = active.filter(x=>!x.done && x.stamp>=now && x.stamp<=weekEnd);
+
+  document.getElementById("tkSummary").innerHTML = `
+    <div class="tk-card"><div class="k">Progress</div>
+      <div class="v">${doneN} / ${active.length} done</div>
+      <div class="tk-bar"><i style="width:${active.length? doneN/active.length*100 : 0}%"></i></div></div>
+    <div class="tk-card"><div class="k">Next up</div>
+      ${next ? `<div class="v" style="font-size:18px">${esc(courseByCode(next.a.code)?.course||next.a.code)}: ${esc(next.a.title)}</div>
+        <div class="s">${niceDate(next.due.date)}${next.due.time?` · ${fmt(next.due.time)}`:""} · ${relTime(next.stamp-now)}</div>`
+             : `<div class="v" style="font-size:18px">Nothing upcoming 🎉</div>`}</div>
+    <div class="tk-card"><div class="k">Next 7 days</div>
+      <div class="v">${thisWeek.length} open</div>
+      <div class="s">${late.length ? `<span style="color:#b3261e">${late.length} overdue</span>` : "Nothing overdue"}</div></div>`;
+
+  // ---- list ----
+  const shown = tasks.filter(x=>{
+    if(x.removed && !f.showRemoved) return false;
+    if(f.hideDone && x.done) return false;
+    if(f.courses.length && !f.courses.includes(x.a.code)) return false;
+    if(f.format==="individual" && x.a.format!=="individual") return false;
+    if(f.format==="group" && x.a.format==="individual") return false;
+    return true;
+  });
+
+  const list = document.getElementById("tkList");
+  if(!shown.length){
+    list.innerHTML = `<div class="tk-empty">${tasks.length ? "Nothing matches these filters." : "No assignments yet."}</div>`;
+    return;
+  }
+
+  const first = parseISO(t.firstWeek || iso(new Date()));
+  let html = `<div class="tk-head"><div></div><div>Deadline</div><div>Course</div><div>Deliverable</div><div>Category</div><div>Format</div><div></div></div>`;
+  let lastWeek = null;
+  shown.forEach(x=>{
+    const wk = Math.floor((parseISO(x.due.date) - first) / (7*864e5));
+    if(wk!==lastWeek){
+      lastWeek = wk;
+      const mon = addDays(first, wk*7), sun = addDays(mon, 6);
+      const inWeek = shown.filter(y=> Math.floor((parseISO(y.due.date)-first)/(7*864e5))===wk);
+      const wkDone = inWeek.filter(y=>y.done).length;
+      const range = `${mon.toLocaleDateString("en-US",{month:"short",day:"numeric"})} – ${sun.toLocaleDateString("en-US",{month:"short",day:"numeric"})}`;
+      html += `<div class="tk-week"><span>${wk>=0 ? `Week ${wk+1} · ` : ""}${range}</span><small>${wkDone}/${inWeek.length} done</small></div>`;
+    }
+    html += taskRow(x, now);
+  });
+  list.innerHTML = html;
+
+  const ta = list.querySelector(".tk-note-edit");
+  if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+}
+
+function taskRow(x, now){
+  const {a, due, o} = x;
+  const c = courseByCode(a.code);
+  const col = c ? COLOR[c.key] : {fg:"var(--muted)", bg:"#eee"};
+  const late = !x.done && !x.removed && x.stamp < now;
+  const soon = !x.done && !x.removed && !late && x.stamp - now < 2*864e5;
+  const cls = ["tk-row", x.done?"done":"", x.removed?"removed":"", late?"overdue":"", soon?"soon":""].join(" ");
+  const id = esc(a.id);
+
+  let dueHtml;
+  if(tkEditing.date===a.id){
+    dueHtml = `<div class="tk-edit">
+      <input type="date" value="${due.date}" data-tk-in="date">
+      <input type="time" value="${due.time||""}" data-tk-in="time">
+      <div class="row"><button class="btn primary" data-tk-savedate="${id}">Save</button>
+      <button class="btn" data-tk-canceldate="1">Cancel</button>
+      ${due.moved ? `<button class="btn" data-tk-resetdate="${id}" title="Back to the syllabus date">Reset</button>` : ""}</div></div>`;
+  } else {
+    const time = due.time ? fmt(due.time) : "time TBA";
+    // a label that is itself a time range (exams) replaces the start time
+    const when = due.label && /^\d/.test(due.label) ? esc(due.label) : time + (due.label ? ` · ${esc(due.label)}` : "");
+    dueHtml = `<div class="tk-due"><b>${niceDate(due.date)}</b><span>${when}</span>` +
+      (due.moved ? `<span class="moved">moved · was <s>${md(due.base.date)}${due.base.time?` ${fmt(due.base.time)}`:""}</s></span>` : "") +
+      (late ? `<span class="flag late">overdue · ${relTime(x.stamp-now)}</span>` : soon ? `<span class="flag soon">due ${relTime(x.stamp-now)}</span>` : "") +
+      `</div>`;
+  }
+
+  let noteHtml = "";
+  if(tkEditing.note===a.id){
+    noteHtml = `<textarea class="tk-note-edit" data-tk-note="${id}" placeholder="Add a note… (saved automatically)">${esc(o.note||"")}</textarea>`;
+  } else if(o.note){
+    noteHtml = `<div class="tk-note" data-tk-opennote="${id}" title="Click to edit">${esc(o.note)}</div>`;
+  }
+
+  return `<div class="${cls}" data-row="${id}">
+    <div class="c-box"><button class="tk-box ${x.done?"on":""}" data-tk-done="${id}" aria-label="Mark complete" title="${x.done?"Mark not done":"Mark done"}">${x.done?"✓":""}</button></div>
+    <div class="c-due">${dueHtml}</div>
+    <div class="c-course"><span class="tk-course" style="background:${col.bg};color:${col.fg}">${esc(c?.course || a.code)}</span></div>
+    <div class="c-title"><div class="tk-title">${esc(a.title)}</div>${a.desc?`<div class="tk-desc">${esc(a.desc)}</div>`:""}${noteHtml}</div>
+    <div class="c-cat tk-cat">${esc(a.category||"")}</div>
+    <div class="c-fmt"><span class="fmt ${a.format}">${a.format==="individual"?"👤":"👥"} ${esc(a.formatLabel || a.format)}</span></div>
+    <div class="c-act tk-actions">
+      <button data-tk-editdate="${id}" title="Change deadline">📅</button>
+      <button data-tk-opennote="${id}" title="${o.note?"Edit note":"Add note"}">📝</button>
+      ${x.removed ? `<button data-tk-restore="${id}" title="Restore">↺</button>`
+                  : `<button data-tk-remove="${id}" title="${a.custom?"Delete":"Remove (not relevant to me)"}">✕</button>`}
+    </div>
+  </div>`;
+}
+
+function tkSave(){ save(); renderTasks(); }
+
+document.getElementById("tasksView").addEventListener("click", e=>{
+  const el = e.target.closest("[data-tk-done],[data-tk-editdate],[data-tk-savedate],[data-tk-canceldate],[data-tk-resetdate],[data-tk-opennote],[data-tk-remove],[data-tk-restore],[data-tk-course],[data-tk-format],[data-tk-add],[data-tk-export],[data-tk-import]");
+  if(!el) return;
+  const d = el.dataset;
+
+  if(d.tkDone){
+    const o = tkState(d.tkDone);
+    o.done = !o.done; o.doneAt = o.done ? new Date().toISOString() : undefined;
+    if(!o.done) delete o.doneAt;
+    tkPrune(d.tkDone);
+    track(o.done ? "task_done" : "task_undone", {id:d.tkDone});
+    tkSave();
+    const box = document.querySelector(`[data-tk-done="${CSS.escape(d.tkDone)}"]`);
+    if(box && o.done){
+      box.classList.add("pop");
+      const left = allTasks().filter(teamVisible).filter(a=>!(state.tracker[a.id]?.done) && !(state.tracker[a.id]?.removed)).length;
+      toast(left ? `Nice, done! ${left} to go.` : "Everything's done. 🎉");
+    }
+  }
+  else if(d.tkEditdate){ tkEditing.date = d.tkEditdate; renderTasks(); }
+  else if(d.tkCanceldate){ tkEditing.date = null; renderTasks(); }
+  else if(d.tkSavedate){
+    const row = el.closest(".tk-row");
+    const date = row.querySelector('[data-tk-in="date"]').value;
+    const time = row.querySelector('[data-tk-in="time"]').value || null;
+    if(!date){ toast("Pick a date"); return; }
+    const a = allTasks().find(x=>x.id===d.tkSavedate);
+    const base = baseDue(a);
+    const o = tkState(a.id);
+    if(date===base.date && time===base.time){ delete o.date; delete o.time; }
+    else { o.date = date; o.time = time; }
+    tkPrune(a.id);
+    tkEditing.date = null;
+    track("task_date_changed", {id:a.id});
+    tkSave();
+  }
+  else if(d.tkResetdate){
+    const o = tkState(d.tkResetdate); delete o.date; delete o.time; tkPrune(d.tkResetdate);
+    tkEditing.date = null; track("task_date_reset", {id:d.tkResetdate}); tkSave();
+  }
+  else if(d.tkOpennote){ tkEditing.note = d.tkOpennote; renderTasks(); }
+  else if(d.tkRemove){
+    const a = allTasks().find(x=>x.id===d.tkRemove);
+    if(a.custom){
+      if(!confirm(`Delete “${a.title}”?`)) return;
+      state.customTasks = state.customTasks.filter(x=>x.id!==a.id);
+      delete state.tracker[a.id];
+    } else {
+      tkState(a.id).removed = true;
+      toast("Removed. Turn on “Show removed” to bring it back.");
+    }
+    track("task_removed", {id:a.id, custom:!!a.custom});
+    tkSave();
+  }
+  else if(d.tkRestore){ const o = tkState(d.tkRestore); delete o.removed; tkPrune(d.tkRestore); tkSave(); }
+  else if(d.tkCourse){
+    const codes = term().courses.map(c=>c.code);
+    if(d.tkCourse==="*") state.tf.courses = [];
+    else {
+      // first click narrows to that course; further clicks toggle
+      let cur = state.tf.courses.length ? [...state.tf.courses] : [];
+      if(!cur.length) cur = [d.tkCourse];
+      else cur = cur.includes(d.tkCourse) ? cur.filter(x=>x!==d.tkCourse) : cur.concat(d.tkCourse);
+      state.tf.courses = cur.length===codes.length ? [] : cur;
+    }
+    track("task_filter_courses", {courses:state.tf.courses}); tkSave();
+  }
+  else if(d.tkFormat){ state.tf.format = d.tkFormat; track("task_filter_format", {format:d.tkFormat}); tkSave(); }
+  else if(d.tkAdd){ openAddTask(); }
+  else if(d.tkExport){ exportBackup(); }
+  else if(d.tkImport){ document.getElementById("tkImportFile").click(); }
+});
+
+// notes: save as you type, close on blur
+document.getElementById("tasksView").addEventListener("input", e=>{
+  if(!e.target.dataset.tkNote) return;
+  const id = e.target.dataset.tkNote;
+  tkState(id).note = e.target.value;
+  if(!e.target.value.trim()) delete state.tracker[id].note;
+  tkPrune(id);
+  save();
+});
+document.getElementById("tasksView").addEventListener("focusout", e=>{
+  const ta = e.target;
+  if(!ta.dataset.tkNote) return;
+  tkEditing.note = null;
+  track("task_note_saved", {id:ta.dataset.tkNote});
+  // swap in place (no full re-render) so a click that caused the blur still lands
+  if(ta.value.trim()){
+    const div = document.createElement("div");
+    div.className = "tk-note"; div.title = "Click to edit";
+    div.dataset.tkOpennote = ta.dataset.tkNote;
+    div.textContent = ta.value;
+    ta.replaceWith(div);
+  } else ta.remove();
+});
+document.getElementById("tasksView").addEventListener("keydown", e=>{
+  if(e.target.dataset.tkNote && e.key==="Escape") e.target.blur();
+  if(e.target.dataset.tkIn && e.key==="Enter") e.target.closest(".tk-row").querySelector("[data-tk-savedate]").click();
+});
+
+document.getElementById("tkHideDone").onchange = e=>{ state.tf.hideDone = e.target.checked; tkSave(); };
+document.getElementById("tkShowRemoved").onchange = e=>{ state.tf.showRemoved = e.target.checked; tkSave(); };
+document.getElementById("tkTeam").onchange = e=>{
+  state.team = e.target.value ? Number(e.target.value) : null;
+  track("team_set", {team:state.team}); tkSave();
+};
+
+function openAddTask(){
+  const t = term();
+  const sheet = document.getElementById("sheet");
+  sheet.innerHTML = `<div class="hd"><p class="eyebrow">Assignments</p><h2>Add an assignment</h2>
+      <button class="close" aria-label="Close">×</button></div>
+    <form class="form" id="addForm">
+      <label>Course<select name="code">${t.courses.map(c=>`<option value="${esc(c.code)}">${esc(c.course)}</option>`).join("")}</select></label>
+      <label>Category<input name="category" list="tkCats" placeholder="Homework"></label>
+      <label class="full">Deliverable<input name="title" required placeholder="e.g. Problem set 2"></label>
+      <label>Due date<input name="date" type="date" required></label>
+      <label>Time (optional)<input name="time" type="time"></label>
+      <label>Format<select name="format">
+        <option value="individual">Individual</option><option value="group">Group</option><option value="team">Learning team</option></select></label>
+      <label>Format label (optional)<input name="formatLabel" placeholder="e.g. Group of 4"></label>
+      <label class="full">Description<textarea name="desc" rows="2"></textarea></label>
+      <div class="actions"><button type="button" class="btn" id="addCancel">Cancel</button><button class="btn primary">Add</button></div>
+      <datalist id="tkCats">${[...new Set(allTasks().map(a=>a.category).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join("")}</datalist>
+    </form>`;
+  sheet.querySelector(".close").onclick = closeSwap;
+  sheet.querySelector("#addCancel").onclick = closeSwap;
+  sheet.querySelector("#addForm").onsubmit = e=>{
+    e.preventDefault();
+    const fd = Object.fromEntries(new FormData(e.target));
+    const label = fd.formatLabel.trim() || {individual:"Individual", group:"Group", team:"Learning team"}[fd.format];
+    state.customTasks.push({id:"u-"+Date.now().toString(36), term:state.term, code:fd.code, title:fd.title.trim(),
+      category:fd.category.trim(), format:fd.format, formatLabel:label, desc:fd.desc.trim(),
+      due:{date:fd.date, time:fd.time || null}});
+    track("task_added", {course:fd.code});
+    closeSwap(); tkSave(); toast("Assignment added");
+  };
+  document.getElementById("scrim").classList.add("open");
+  sheet.querySelector('[name="title"]').focus();
+}
+
+/* ---------------- backup / restore ---------------- */
+const BACKUP_KEYS = ["cohort","swaps","tracker","customTasks","team","tf","overlayCourses","overlayCohorts"];
+function exportBackup(){
+  const data = {app:"som-core-schedule", version:1, exportedAt:new Date().toISOString()};
+  BACKUP_KEYS.forEach(k=> data[k] = state[k]);
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `som-schedule-backup-${iso(new Date())}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  track("backup_exported");
+}
+document.getElementById("tkImportFile").onchange = async e=>{
+  const file = e.target.files[0]; e.target.value = "";
+  if(!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if(data.app!=="som-core-schedule") throw new Error("Not a backup from this planner");
+    if(!confirm(`Restore backup from ${data.exportedAt?.slice(0,10) || "file"}? This replaces your current progress, notes, and swaps.`)) return;
+    BACKUP_KEYS.forEach(k=>{ if(k in data) state[k] = data[k]; });
+    save(); render(); toast("Backup restored");
+    track("backup_restored");
+  } catch(err){ alert("Couldn't restore: " + err.message); }
+};
+
+render();
+</script>
+</body>
+</html>

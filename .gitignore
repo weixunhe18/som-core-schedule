@@ -1,0 +1,4 @@
+# Whitelist: only publish the web app, never syllabi/readings
+*
+!.gitignore
+!index.html
