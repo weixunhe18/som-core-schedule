@@ -358,6 +358,19 @@
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
+  /* floating feedback bubble */
+  .fb-bubble{
+    position:fixed;right:20px;bottom:20px;z-index:40;
+    display:flex;align-items:center;gap:7px;
+    background:var(--yale-blue);color:#fff;border:none;border-radius:999px;
+    padding:11px 16px 11px 13px;font:500 13.5px 'IBM Plex Sans',sans-serif;cursor:pointer;
+    box-shadow:0 6px 20px rgba(6,32,66,.28);transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .fb-bubble:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(6,32,66,.34);}
+  .fb-bubble svg{width:18px;height:18px;flex:none;}
+  .fb-hint{font-size:12px;color:var(--faint);margin:0;}
+  @media print{.fb-bubble{display:none;}}
+
   /* ---------- Assignments tab ---------- */
   #appTabs{margin-bottom:18px;}
   .tk-summary{
@@ -476,6 +489,8 @@
     .ctl-label{min-width:0;width:100%;}
     .scrim{align-items:flex-end;padding:0;}
     .sheet{max-width:none;border-radius:12px 12px 0 0;max-height:80vh;}
+    .fb-bubble{right:14px;bottom:14px;padding:12px;}
+    .fb-bubble span{display:none;}
   }
 </style>
 </head>
@@ -594,6 +609,10 @@
   <div class="sheet" role="dialog" aria-modal="true" id="sheet"></div>
 </div>
 <div class="toast" id="toast"></div>
+<button class="fb-bubble" id="fbBubble" aria-label="Send feedback">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>
+  <span>Feedback</span>
+</button>
 
 <script>
 /* =====================================================================
@@ -837,6 +856,7 @@ const CONFIG = {
    ===================================================================== */
 function track(event, props = {}){
   (window.__scheduleEvents = window.__scheduleEvents || []).push({event, props, t: Date.now()});
+  if(window.posthog?.capture) window.posthog.capture(event, props);
 }
 
 /* ---------------- constants & helpers ---------------- */
@@ -1745,6 +1765,35 @@ function openAddTask(){
   document.getElementById("scrim").classList.add("open");
   sheet.querySelector('[name="title"]').focus();
 }
+
+/* ---------------- feedback ---------------- */
+// Delivered as a "feedback_submitted" analytics event (shows up in PostHog once it's wired in).
+function openFeedback(){
+  const sheet = document.getElementById("sheet");
+  sheet.innerHTML = `<div class="hd"><p class="eyebrow">Feedback</p><h2>How can we make this tool better for you?</h2>
+      <button class="close" aria-label="Close">×</button></div>
+    <form class="form" id="fbForm">
+      <label class="full">Your thoughts<textarea name="message" rows="5" required
+        placeholder="Something confusing, missing, or broken? An idea you'd love to see?"></textarea></label>
+      <label class="full">Email (optional, if you'd like a reply)<input name="email" type="email" placeholder="you@yale.edu"></label>
+      <p class="fb-hint full">Sent anonymously unless you add your email.</p>
+      <div class="actions"><button type="button" class="btn" id="fbCancel">Cancel</button><button class="btn primary">Send</button></div>
+    </form>`;
+  sheet.querySelector(".close").onclick = closeSwap;
+  sheet.querySelector("#fbCancel").onclick = closeSwap;
+  sheet.querySelector("#fbForm").onsubmit = e=>{
+    e.preventDefault();
+    const fd = Object.fromEntries(new FormData(e.target));
+    const props = {message: fd.message.trim(), tab: state.tab, term: state.term, cohort: state.cohort};
+    if(fd.email.trim()) props.email = fd.email.trim();
+    track("feedback_submitted", props);
+    closeSwap(); toast("Thanks — feedback sent!");
+  };
+  document.getElementById("scrim").classList.add("open");
+  sheet.querySelector('[name="message"]').focus();
+  track("feedback_opened", {tab: state.tab});
+}
+document.getElementById("fbBubble").onclick = openFeedback;
 
 /* ---------------- backup / restore ---------------- */
 const BACKUP_KEYS = ["cohort","swaps","tracker","customTasks","team","tf","overlayCourses","overlayCohorts"];
